@@ -38,7 +38,6 @@ public class Trie implements ITrie {
                     wordCount = wordCount + 1;
                 }
                 thisNode.incrementValue();
-//                wordCount = wordCount + 1;
             }
         }
     }
@@ -116,84 +115,52 @@ public class Trie implements ITrie {
     public boolean equals(Object o) {
 
         // check if o is null (return false)
-        System.out.println("Made it here a" + o.toString());
         if (o == null) {
-//            System.out.println("Made it here b");
             return false;
         }
 //        check if o is equal to this (return true)
         if (o == this) {
-//            System.out.println("Made it here c");
             return true;
         }
         //check if this and o have same class (if not, return false)
         if (o.getClass() != this.getClass()) {
-//            System.out.println("Made it here d");
             return false;
         }
 
         Trie d = (Trie)o;
-//        System.out.println("Made it here e");
         //check if this and d have same word/node counts (if not, return false)
         if (d.getNodeCount() != this.getNodeCount()) {
-//            System.out.println("Made it here f");
             return false;
         }
         if (d.getWordCount() != this.getWordCount()) {
-//            System.out.println("Made it here g");
             return false;
         }
-        System.out.println("Made it here h" + "\n" + this.toString() + d.toString());
         return equalsHelper(this.root, d.root);
 
     }
 
     private boolean equalsHelper(Node n1, Node n2) {
-//        System.out.println("Made it here i");
         //check if n1 and n2 have same count (if not, return false)
         if (n1.getValue() != n2.getValue()) {
-//            System.out.println("Made it here j");
             return false;
         }
-        //check if n1 and n2 both have non-null children in same indexes (if not, return false)
-        Vector n1Nulls = new Vector();
-        Vector n2Nulls = new Vector();
-        for (int i = 0; i < 26; i++) {
-//            System.out.println("Made it here k");
 
+        //recurse through child nodes, looking for inequalities
+        for (int i = 0; i < 26; i++) {
             Node child1 = n1.getChildren()[i];
             Node child2 = n2.getChildren()[i];
-            if (child1 != null) {
-                System.out.println("Made it here k1 index: " + i);
-                n1Nulls.add(i);
+            if (child1 != null && child2 == null) {
+                return false;
             }
-            if (child2 != null) {
-                System.out.println("Made it here k2 index: " + i);
-                n2Nulls.add(i);
+            else if (child1 == null && child2 != null) {
+                return false;
             }
-        }
-        boolean equalArrays = n1Nulls.equals(n2Nulls);
-        System.out.println("Made it here k2.5...1:" + n1Nulls + " 2: " + n2Nulls);
-        if (!equalArrays) {
-//            System.out.println("Made it here k3...1: " + n1Nulls + " 2: " + n2Nulls);
-            return false;
-        }
-
-        //recurse on children, compare child subtrees
-        for (int j = 0; j < 26; j++) {
-            System.out.println("Made it here l index: " + j);
-            Node child1Recurse = n1.getChildren()[j];
-            Node child2Recurse = n2.getChildren()[j];
-
-            if (child1Recurse != null && child2Recurse != null) {
-                System.out.println("Made it here m with index: " + j);
-                if(!equalsHelper(child1Recurse, child2Recurse)) {
+            else if (child1 != null && child2 != null){
+                if(!equalsHelper(child1, child2)) {
                     return false;
                 }
             }
-//            System.out.println("Made it here n");
         }
-//        System.out.println("Made it here o");
         return true;
     }
 

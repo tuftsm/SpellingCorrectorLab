@@ -26,7 +26,7 @@ public class SpellCorrector implements ISpellCorrector {
     public void useDictionary(String dictionaryFileName) throws IOException {
 
 
-        Scanner dict = new Scanner(new FileReader("C:\\Users\\tufts\\SpellingCorrector\\src\\"+dictionaryFileName));
+        Scanner dict = new Scanner(new FileReader(dictionaryFileName));
         String word;
 
         while (dict.hasNext()) {

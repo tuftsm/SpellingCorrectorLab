@@ -13,9 +13,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class SpellTest {
 
-    private static final String WORD_FILENAME = "spell/word.txt";
-    private static final String WORDS_FILENAME = "spell/words.txt";
-    private static final String BIG_FILENAME = "spell/notsobig.txt";
+    private static final String WORD_FILENAME = "word.txt";
+    private static final String WORDS_FILENAME = "words.txt";
+    private static final String BIG_FILENAME = "notsobig.txt";
     private static final String WORD = "yea";
     private ISpellCorrector studentCorrector;
 
