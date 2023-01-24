@@ -3,20 +3,16 @@ package spell;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
-import java.util.List;
-import java.util.ArrayList;
 import java.util.*;
 
 public class SpellCorrector implements ISpellCorrector {
 
 
     public Trie myDict;
-    Map<String, Integer> foundWords = new HashMap<>();
     Vector<String> validEdits;
     Vector<Integer> editCounts;
     Vector<String> validEdits2;
     Vector<Integer> editCounts2;
-//    public List<String> listOfWords = new ArrayList<String>();
 
     public SpellCorrector() {
         myDict = new Trie();
@@ -36,13 +32,8 @@ public class SpellCorrector implements ISpellCorrector {
         while (dict.hasNext()) {
             word = dict.next();
             word = word.toLowerCase();
-//            inputDict.put(word, inputDict.getOrDefault(word, 0)+1);
-//            listOfWords.add(word);
             myDict.add(word);
         }
-//        System.out.println(myDict);
-
-//        String[] array = listOfWords.toArray(new String[0]);
 
 
     }
@@ -77,99 +68,65 @@ public class SpellCorrector implements ISpellCorrector {
             allVars.addAll(transpositions);
             allVars.addAll(alterations);
             allVars.addAll(insertions);
-            System.out.println(deletions);
-            System.out.println(transpositions);
-            System.out.println(alterations);
-            System.out.println(insertions);
-            System.out.println(inputWord + " -- " + allVars);
 
             for (String potentialWord : allVars) {
                 INode searching = myDict.find(potentialWord);
                 if (searching != null) {
-                    foundWords.put(potentialWord, searching.getValue());
                     validEdits.add(potentialWord);
                     int amount = myDict.find(potentialWord).getValue();
                     editCounts.add(amount);
-                    System.out.println("ADDED " + potentialWord + " to vector with count " + amount);
                 }
             }
-            System.out.println("vector size: " + validEdits.size() + " " + editCounts.size());
             if (validEdits.size() > 1) {
-                System.out.println("GOT HERE >1" + validEdits + editCounts);
                 int maxCount = Collections.max(editCounts);
                 int indexOfMax = editCounts.indexOf(maxCount);
                 String bestSuggestion = validEdits.get(indexOfMax);
+                validEdits.clear();
+                editCounts.clear();
                 return bestSuggestion;
             }
             else if (validEdits.size() == 1) {
-                System.out.println("GOT HERE size 1");
                 String bestSuggestion = validEdits.get(0);
-                System.out.println("returning " + bestSuggestion);
                 validEdits.clear();
                 editCounts.clear();
                 return bestSuggestion;
             }
             else {
                 //if no valid edit distance 1 words
-                System.out.println("made it here 4");
                 Set<String> allVars2 = new HashSet<>();
                 Set<String> deletions2 = new HashSet<>();
                 Set<String> transpositions2 = new HashSet<>();
                 Set<String> alterations2 = new HashSet<>();
                 Set<String> insertions2 = new HashSet<>();
-                System.out.println("made it here 5");
                 for (String eachWord : allVars) {
-                    System.out.println("made it here 5.5" + eachWord);
                     deletions2 = deleteWords(eachWord);
-                    System.out.println("made it here 5.6");
                     if (eachWord.length() >= 2) {
                         transpositions2 = transposeWords(eachWord);
                     }
-                    System.out.println("made it here 5.7");
                     alterations2 = alterWords(eachWord);
-                    System.out.println("made it here 5.8");
                     insertions2 = insertWords(eachWord);
-                    System.out.println("made it here 6" + eachWord);
 
                     allVars2.addAll(deletions2);
-                    System.out.println("made it here 6.1");
                     allVars2.addAll(transpositions2);
-                    System.out.println("made it here 6.2");
                     allVars2.addAll(alterations2);
-                    System.out.println("made it here 6.3");
                     allVars2.addAll(insertions2);
-                    System.out.println("made it here 6.4");
                 }
-                System.out.println("made it here 7");
                 for (String potentialWord2 : allVars2) {
                     INode searching2 = myDict.find(potentialWord2);
-//                    System.out.println("made it here 8");
                     if (searching2 != null) {
-//                        System.out.println("made it here 9");
-//                        foundWords.put(potentialWord, searching.getValue());
                         validEdits2.add(potentialWord2);
                         int amount2 = myDict.find(potentialWord2).getValue();
                         editCounts2.add(amount2);
-                        System.out.println("ADDED " + potentialWord2 + " to vector2 with count " + amount2);
                     }
                 }
-                System.out.println("vector2 size: " + validEdits2.size() + " " + editCounts2.size());
                 if (validEdits2.size() > 1) {
-                    System.out.println("GOT HERE2 >1" + validEdits2 + editCounts2);
-//                    return validEdits2.get(0);
                     int maxCount2 = Collections.max(editCounts2);
-                    System.out.println("made it here 1");
                     int indexOfMax2 = editCounts2.indexOf(maxCount2);
-                    System.out.println("made it here 2");
                     String bestSuggestion2 = validEdits2.get(indexOfMax2);
-                    System.out.println("made it here 3");
-                    System.out.println("returning2 " + bestSuggestion2);
                     return bestSuggestion2;
                 }
                 else if (validEdits2.size() == 1) {
-                    System.out.println("GOT HERE2 size 1");
                     String bestSuggestion2 = validEdits2.get(0);
-                    System.out.println("returning2 " + bestSuggestion2);
                     return bestSuggestion2;
                 }
                 else {
